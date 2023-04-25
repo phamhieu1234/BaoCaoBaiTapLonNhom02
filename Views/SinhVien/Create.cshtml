@@ -1,0 +1,52 @@
+@model BaoCaoBaiTapLonNhom02.Models.SinhVien
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Sinh viên điền đầy đủ thông tin của mình</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @* <div class="form-group">
+                <label asp-for="MaSV" class="control-label"></label>
+                <input asp-for="MaSV" class="form-control" />
+                <span asp-validation-for="Mancc" class="text-danger"></span>
+                </div> *@
+            <div class="form-group">
+                <label asp-for="MaSV" class="control-label"></label>
+                <input asp-for="MaSV" class="form-control" value="@ViewBag.SinhVien" readonly />
+                <span asp-validation-for="MaSV" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TenSV" class="control-label"></label>
+                <input asp-for="TenSV" class="form-control" />
+                <span asp-validation-for="TenSV" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaNhom" class="control-label"></label>
+                <select asp-for="MaNhom" class ="form-control" asp-items="ViewBag.MaNhom"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaCathi" class="control-label"></label>
+                <select asp-for="MaCathi" class ="form-control" asp-items="ViewBag.MaCathi"></select>
+            </div>
+            <br>
+            <div class="form-group">
+                <input type="submit" value="Đăng ký" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

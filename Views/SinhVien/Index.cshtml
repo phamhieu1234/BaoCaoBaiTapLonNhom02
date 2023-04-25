@@ -1,0 +1,96 @@
+@model IEnumerable<BaoCaoBaiTapLonNhom02.Models.SinhVien>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Danh sách Sinh viên đăng ký</h1>
+
+<p>
+    <form asp-action="Create">
+        <button class="button button1">Thêm sinh viên</button>
+     <style>
+        .button1{
+        background-color:#4CAF50;
+        border: none;
+        border-radius: 12px;
+        color: black;
+        padding: 10px 12px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 2px 2px;
+        cursor: pointer;
+        }
+        </style>
+    </form>
+</p>
+<form asp-action="Index" method="get" class="form-inline">
+    <label for="Ten">Tìm kiếm theo Tên Sinh Viên:</label>
+     <input type="text" name="Ten" />
+    <label for="Nhom">Tìm kiếm theo Nhóm:</label>
+    <input type="text" name="Nhom" />
+    <label for="Cathi">Tìm kiếm theo Ca thi:</label>
+    <input type="text" name="Cathi" />
+    <button class="button button2">Tìm kiếm</button>
+<style>
+    .button{
+        background-color:#4CAF50;
+        border: none;
+        border-radius: 12px;
+        color: white;
+        padding: 10px 12px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 2px 2px;
+        cursor: pointer;
+    }
+</style>
+</form>
+<br>
+<table class="table table-bordered table-danger">
+    <thead>
+        <tr class="table-success text-center">
+            <th>
+                @Html.DisplayNameFor(model => model.MaSV)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TenSV)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nhom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cathi)
+            </th>
+           
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr class="ccc">
+            <td>
+                @Html.DisplayFor(modelItem => item.MaSV)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TenSV)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nhom.MaNhom)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cathi.MaCathi)
+            </td>
+           
+            <td class="view-bang">
+                <a class="c1c" asp-action="Edit" asp-route-id="@item.MaSV">Sửa</a> |
+                <a class="c2c" asp-action="Details" asp-route-id="@item.MaSV">Chi tiết</a> |
+                <a class="c3c" asp-action="Delete" asp-route-id="@item.MaSV">Xóa</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
