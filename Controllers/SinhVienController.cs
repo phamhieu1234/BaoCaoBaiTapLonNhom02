@@ -14,6 +14,7 @@ namespace BaoCaoBaiTapLonNhom02.Controllers
     public class SinhVienController : Controller
     {
         StringProcess strPro = new StringProcess();
+        private ExcelProcess _excelProcess = new ExcelProcess();
         private readonly ApplicationDbContext _context;
 
         public SinhVienController(ApplicationDbContext context)
@@ -196,5 +197,54 @@ namespace BaoCaoBaiTapLonNhom02.Controllers
         {
           return (_context.SinhVien?.Any(e => e.MaSV == id)).GetValueOrDefault();
         }
+        public async Task<IActionResult> Upload()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult>Upload(IFormFile file)
+        {
+            if (file!=null)
+            {
+                string fileExtension = Path.GetExtension(file.FileName);
+                if (fileExtension != ".xls" && fileExtension != ".xlsx")
+                {
+                    ModelState.AddModelError("", "Please choose excel file to upload!");
+                }
+                else
+                {
+                    //rename file when upload to sever
+                    var fileName = DateTime.Now.ToShortTimeString() + fileExtension;
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory() + "/Uploads/Excels", fileName);
+                    var fileLocation = new FileInfo(filePath).ToString();
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        //save file to server
+                        await file.CopyToAsync(stream);
+                        //read data from file and write to database
+                        var dt = _excelProcess.ExcelToDataTable(fileLocation);
+                        //using for loop to read data form dt
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            //create a new Person object
+                            var ser = new SinhVien();
+                            //set values for attribiutes
+                            ser.MaSV = dt.Rows[i][0].ToString();
+                            ser.TenSV = dt.Rows[i][1].ToString();
+                            ser.MaNhom = dt.Rows[i][2].ToString();
+                            ser.MaCathi = dt.Rows[i][3].ToString();
+                            //add oject to context
+                            _context.SinhVien.Add(ser);
+                        }
+                        //save to database
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+            }
+            return View();
+        }
     }
 }
+   
